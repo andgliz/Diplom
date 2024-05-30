@@ -1,0 +1,25 @@
+{% extends 'prometheus/base.html' %}
+
+{% block content %}
+<h1>{{title}}</h1>
+
+<ul>
+	{% for e in events %}
+	<li><div class="article-panel">
+	<p class="first">Категория: {{e.category}}</p>
+</div>
+
+{% if e.image %}
+	<p><img class="img-article-left thumb" src="{{e.image.url}}"></p>
+{% endif %}
+
+		<h2>{{e.title}}</h2>
+		<p>{{e.description|linebreaks}}</p>
+		<hr>
+		<div class="clear"></div>
+		<p class="link-read-post"><a href="{{ e.get_absolute_url }}">Читать пост</a></p>
+	</li>
+	{% endfor %}
+</ul>
+
+{% endblock %}
