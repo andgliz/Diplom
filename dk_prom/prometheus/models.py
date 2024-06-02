@@ -1,13 +1,14 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 # Create your models here.
 
 class Events(models.Model):
-    title = models.CharField(verbose_name="Название мероприятия", max_length=255)
+    title = models.CharField(verbose_name="Название события", max_length=255)
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
-    description = models.CharField(verbose_name="Описание мероприятия")
+    description = models.CharField(verbose_name="Описание события")
     image = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Обложка")
     data = models.DateField(verbose_name="Дата")
     time = models.TimeField(verbose_name="Время")
@@ -35,12 +36,12 @@ class Categories(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('category', kwargs={'cat_id': self.pk})
+        return reverse('category', kwargs={'cat_slug': self.slug})
 
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
-        ordering = ['id']
+        ordering = ['name']
 
 
 class Spaces(models.Model):
@@ -64,7 +65,7 @@ class Booking(models.Model):
     sets_reseved = models.CharField(verbose_name="Количество забронированных мест", max_length=255)
     time = models.DateTimeField(auto_now_add=True, verbose_name="Время бронирования")
     event = models.ForeignKey(Events, on_delete=models.PROTECT)
-    # user = models.ForeignKey("public.auth_user", on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
 
     def get_absolute_url(self):
         return reverse('booking', kwargs={'book_slug': self.slug})

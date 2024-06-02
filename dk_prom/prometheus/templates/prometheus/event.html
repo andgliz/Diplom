@@ -1,0 +1,18 @@
+{% extends 'prometheus/base.html' %}
+
+{% block content %}
+<h1>{{events.title}}</h1>
+
+
+{% if events.image %}
+	<p><img class="img-article-left thumb" src="{{events.image.url}}"></p>
+{% endif %}
+
+{{events.description|linebreaks}}
+
+{% if request.user.is_authenticated and events.cost %}
+<li class="last"><a href="{% url 'booking' %}">Купить билет</a></li>
+{% else %}
+<li class="last"><a href="{% url 'login' %}">Купить билет</a></li>
+{% endif %}
+{% endblock %}
