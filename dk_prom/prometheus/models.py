@@ -62,10 +62,10 @@ class Spaces(models.Model):
 
 
 class Booking(models.Model):
-    sets_reseved = models.CharField(verbose_name="Количество забронированных мест", max_length=255)
+    seats_reserved = models.IntegerField(verbose_name="Количество забронированных мест")
     time = models.DateTimeField(auto_now_add=True, verbose_name="Время бронирования")
     event = models.ForeignKey(Events, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
 
     def get_absolute_url(self):
-        return reverse('booking', kwargs={'book_slug': self.slug})
+        return reverse('booking', kwargs={'book_id': self.pk})

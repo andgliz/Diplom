@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.views.generic.edit import FormMixin
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -17,17 +18,6 @@ from .utils import *
 
 def index(request):
     return render(request, 'prometheus/index.html', {"title": "Главная страница"})
-
-
-class Booking(DetailView):
-    model = Booking, Events
-    template_name = "prometheus/booking.html"
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title="Купить")
-        return dict(list(context.items()) + list(c_def.items()))
-
 
 class Afisha(DataMixin, ListView):
     model = Events
@@ -81,17 +71,34 @@ def pageNotFound(request, exception):
     return HttpResponseNotFound("<h1>Страница не найдена</h1>")
 
 
-class ShowEvent(DataMixin, DetailView):
+class ShowEvent(DataMixin, FormMixin, DetailView):
     model = Events
+    form_class = BookingForm
     template_name = 'prometheus/event.html'
     slug_url_kwarg = 'event_slug'
-    context_object_name = 'events'
+    context_object_name = 'event'
+    success_url = reverse_lazy('afisha')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = context['events']
+
+        cur_event = context['event']
+
+        context['title'] = cur_event.title
+        context['free_seats'] = self.calculate_free_seats(cur_event)
+
         c_def = self.get_user_context(title="Афиша")
         return dict(list(context.items()) + list(c_def.items()))
+
+    def calculate_free_seats(self, cur_event):
+        space_capacity = cur_event.space.capacity
+        event_bookings = Booking.objects.filter(event_id=cur_event.id)
+
+        event_seats_reserved = 0
+        for booking in event_bookings:
+            event_seats_reserved += booking.seats_reserved
+
+        return space_capacity - event_seats_reserved
 
 
 # def show_event(request, event_slug):
@@ -144,6 +151,13 @@ class AddEvent(DataMixin, CreateView):
         c_def = self.get_user_context(title="Добавление события")
         return dict(list(context.items()) + list(c_def.items()))
 
+def proceed_book(request):
+    # TODO: Добавить обработку помимо POST и настроить редирект
+    if request.method == 'POST':
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('afisha')
 
 # def add_event(request):
 #     if request.method == 'POST':

@@ -1,18 +1,44 @@
 {% extends 'prometheus/base.html' %}
 
 {% block content %}
-<h1>{{events.title}}</h1>
+<h1>{{event.title}}</h1>
+<h1>{{free_seats}}</h1>
 
-
-{% if events.image %}
-	<p><img class="img-article-left thumb" src="{{events.image.url}}"></p>
+{% if event.image %}
+	<p><img class="img-article-left thumb" src="{{event.image.url}}"></p>
 {% endif %}
 
-{{events.description|linebreaks}}
+{{event.description|linebreaks}}
 
-{% if request.user.is_authenticated and events.cost %}
-<li class="last"><a href="{% url 'booking' %}">Купить билет</a></li>
+{% if request.user.is_authenticated %}
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Купить билет
+</button>
+<!-- Модальное окно -->
+<form action="{% url 'book' %}" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Выберите количество билетов</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body">
+        {% for f in form %}
+<label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}
+<div class="form-error">{{ f.errors }}</div>
+{% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button class="btn btn-primary" type="submit">Купить</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
 {% else %}
-<li class="last"><a href="{% url 'login' %}">Купить билет</a></li>
+<a href="{% url 'login' %}" class="btn btn-primary" role="button">Купить билет</a>
 {% endif %}
 {% endblock %}

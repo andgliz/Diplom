@@ -49,3 +49,10 @@ class RegisterUserForm(UserCreationForm):
 class LoginUserForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Логин"}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': "Пароль"}))
+
+
+class BookingForm(forms.ModelForm):
+
+    class Meta:
+        model = Booking
+        fields = '__all__'
