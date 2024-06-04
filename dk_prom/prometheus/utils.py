@@ -2,7 +2,8 @@ from django.db.models import Count
 
 from .models import *
 
-menu = [{'title': "Афиша", 'url_name': 'afisha'},
+menu = [{'title': "Главная страница", 'url_name': 'home'},
+        {'title': "Афиша", 'url_name': 'afisha'},
         {'title': "Творчество", 'url_name': 'art'},
         {'title': "Новости", 'url_name': 'news'},
         {'title': "О нас", 'url_name': 'about'},
@@ -15,8 +16,8 @@ class DataMixin:
         cats = Categories.objects.all()
 
         user_menu = menu.copy()
-        if not self.request.user.is_authenticated:
-            user_menu.pop(1)
+        # if not self.request.user.is_authenticated:
+        #     user_menu.pop(1)
 
         context['menu'] = user_menu
 

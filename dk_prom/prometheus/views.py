@@ -19,6 +19,22 @@ from .utils import *
 def index(request):
     return render(request, 'prometheus/index.html', {"title": "Главная страница"})
 
+
+class MainPage(DataMixin, ListView):
+    model = Events
+    template_name = "prometheus/index.html"
+    context_object_name = 'events'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Главная страница")
+        return dict(list(context.items()) + list(c_def.items()))
+
+
+    def get_queryset(self):
+        return Events.objects.filter(data__gte=datetime.now())
+
+
 class Afisha(DataMixin, ListView):
     model = Events
     template_name = "prometheus/afisha.html"
@@ -73,6 +89,8 @@ def pageNotFound(request, exception):
 
 class ShowEvent(DataMixin, FormMixin, DetailView):
     model = Events
+    # TODO: Посмотреть как вставлять дефолт параметры для формы
+    #  https://stackoverflow.com/questions/604266/django-set-default-form-values
     form_class = BookingForm
     template_name = 'prometheus/event.html'
     slug_url_kwarg = 'event_slug'
@@ -101,6 +119,13 @@ class ShowEvent(DataMixin, FormMixin, DetailView):
         return space_capacity - event_seats_reserved
 
 
+def proceed_book(request):
+    # TODO: Добавить обработку помимо POST и настроить редирект
+    if request.method == 'POST':
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('afisha')
 # def show_event(request, event_slug):
 #     events = get_object_or_404(Events, slug=event_slug)
 #
@@ -150,14 +175,6 @@ class AddEvent(DataMixin, CreateView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Добавление события")
         return dict(list(context.items()) + list(c_def.items()))
-
-def proceed_book(request):
-    # TODO: Добавить обработку помимо POST и настроить редирект
-    if request.method == 'POST':
-        form = BookingForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('afisha')
 
 # def add_event(request):
 #     if request.method == 'POST':

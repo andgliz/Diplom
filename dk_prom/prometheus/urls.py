@@ -3,7 +3,7 @@ from django.urls import path, re_path
 from .views import *
 
 urlpatterns = [
-    path('', index, name='home'),
+    path('', MainPage.as_view(), name='home'),
     path('categories/', categories),
     path('afisha/', Afisha.as_view(), name='afisha'),
     # path('', PrometheusHome.as_view(), name='home'),
