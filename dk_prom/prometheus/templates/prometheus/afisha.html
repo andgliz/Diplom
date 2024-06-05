@@ -1,48 +1,50 @@
 {% extends 'prometheus/base.html' %}
 
 {% block content %}
-<table class="table-content" border=0 cellpadding="0" cellspacing="0">
-<tr>
-<!-- Sidebar слева -->
-	<td valign="top" class="left-chapters">
-	<ul id="leftchapters">
-{% if cat_selected == 0 %}
-		<li class="selected">Все категории</li>
-{% else %}
-		<li><a href="{% url 'afisha' %}">Все категории</a></li>
-{% endif%}
-
-{% for c in cats %}
-	{% if c.pk == cat_selected %}
-		<li class="selected">{{c.name}}</li>
-	{% else %}
-		<li><a href="{{ c.get_absolute_url }}">{{c.name}}</a></li>
-	{% endif %}
-{% endfor %}
-
-		<li class="share">
-		<p>Наш канал</p>
-		</li>
-	</ul>
-</td>
-<h1>{{title}}</h1>
-<p class="link-read-post"><a href="add_event">Добавить событие</a></p>
-<ul>
-	{% for e in events %}
-	<li><div class="article-panel">
-	<p class="first">Категория: {{e.category}}</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2 btn-group">
+            <a class="btn btn-secondary btn-lg" href="{% url 'afisha' %}" role="button">Все категории</a>
+            <!--  <button class="btn btn-secondary btn-sm" type="button">-->
+            <button type="button" class="btn btn-lg btn-secondary dropdown-toggle dropdown-toggle-split"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="visually-hidden">Переключатель выпадающего списка</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                {% for c in cats %}
+                {% if c.pk == cat_selected %}
+                <li class="dropdown-item active">{{c.name}}</li>
+                {% else %}
+                <a href="{{ c.get_absolute_url }}" class="dropdown-item">{{c.name}}</a>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-2 offset-md-8">
+            {% if request.user.is_authenticated %}
+            {% if user.is_superuser %}
+            <a class="btn btn-secondary btn-lg" href="add_event" role="button">Добавить событие</a>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
 </div>
+<div class="container-fluid pt-3">
+    <h1 class="h3 mb-3 fw-normal text-center">{{title}}</h1>
 
-{% if e.image %}
-	<p><img class="img-article-left thumb" src="{{e.image.url}}"></p>
-{% endif %}
-
-		<h2>{{e.title}}</h2>
-		<p>{{e.description|linebreaks}}</p>
-		<hr>
-		<div class="clear"></div>
-		<p class="link-read-post"><a href="{{ e.get_absolute_url }}">Читать пост</a></p>
-	</li>
-	{% endfor %}
-</ul>
+    <div class="row pt-3">
+        {% for e in events %}
+        <div class="col-sm-3">
+            {% if e.image %}
+            <a href="{{ e.get_absolute_url }}"><img class="img-article-left thumb" style="width: 80%;"
+                                                    src="{{e.image.url}}"></a>
+            {% endif %}
+            <p><h4><a
+                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                href="{{ e.get_absolute_url }}">{{e.title}}</a></h4>
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
