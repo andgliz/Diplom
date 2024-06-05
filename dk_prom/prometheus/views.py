@@ -8,8 +8,12 @@ from django.views.generic.edit import FormMixin
 from django.http import HttpResponse, HttpResponseNotFound, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
 from .forms import *
 from .models import *
@@ -30,7 +34,6 @@ class MainPage(DataMixin, ListView):
         c_def = self.get_user_context(title="Главная страница")
         return dict(list(context.items()) + list(c_def.items()))
 
-
     def get_queryset(self):
         return Events.objects.filter(data__gte=datetime.now())
 
@@ -44,7 +47,6 @@ class Afisha(DataMixin, ListView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Афиша")
         return dict(list(context.items()) + list(c_def.items()))
-
 
     def get_queryset(self):
         return Events.objects.filter(data__gte=datetime.now())
@@ -126,6 +128,8 @@ def proceed_book(request):
         if form.is_valid():
             form.save()
             return redirect('afisha')
+
+
 # def show_event(request, event_slug):
 #     events = get_object_or_404(Events, slug=event_slug)
 #
@@ -152,6 +156,7 @@ class AfishaCategory(DataMixin, ListView):
                                       cat_selected=context['events'][0].category_id)
         return dict(list(context.items()) + list(c_def.items()))
 
+
 # def show_category(request, cat_id):
 #     events = Events.objects.filter(category_id=cat_id)
 #
@@ -175,6 +180,7 @@ class AddEvent(DataMixin, CreateView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Добавление события")
         return dict(list(context.items()) + list(c_def.items()))
+
 
 # def add_event(request):
 #     if request.method == 'POST':
@@ -220,6 +226,7 @@ class LoginUser(DataMixin, LoginView):
     def get_success_url(self):
         return reverse_lazy('home')
 
+
 class NewsUser(DataMixin, LoginView):
     form_class = LoginUserForm
     template_name = 'prometheus/news.html'
@@ -236,3 +243,65 @@ class NewsUser(DataMixin, LoginView):
 def logout_user(request):
     logout(request)
     return redirect('login')
+
+
+class UserSettingsView(LoginRequiredMixin, TemplateView):
+    template_name = 'prometheus/user_profile.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user == get_object_or_404(User, username=self.kwargs.get('username')):
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied("Вы не имеете доступа к этой странице.")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user_info_form'] = UserInfoForm(instance=self.request.user)
+        context['user_password_form'] = UserPasswordForm(self.request.user)
+        context['title'] = f'Настройки профиля {self.request.user}'
+        return context
+
+    def post(self, request, *args, **kwargs):
+        if 'user_info_form' in request.POST:
+            form = UserInfoForm(request.POST, instance=request.user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Данные успешно изменены.')
+                return redirect('user_profile_settings', form.cleaned_data.get('username'))
+            else:
+                context = self.get_context_data(**kwargs)
+                context['user_info_form'] = form
+                return render(request, self.template_name, context)
+        elif 'user_password_form' in request.POST:
+            form = UserPasswordForm(request.user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Пароль успешно изменён.')
+                return self.get(request, *args, **kwargs)
+            else:
+                context = self.get_context_data(**kwargs)
+                context['user_password_form'] = form
+                return render(request, self.template_name, context)
+        else:
+            return self.get(request, *args, **kwargs)
+
+
+class UserProfileView(DataMixin, TemplateView):
+    template_name = 'prometheus/profile_page.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            user = get_object_or_404(User, username=self.kwargs.get('username'))
+        except User.DoesNotExist:
+            raise Http404("Пользователь не найден")
+        context['user_profile'] = user
+        context['user_book'] = Booking.objects.filter(user=user)
+        # context['title'] = f'Профиль пользователя {user}'
+
+        # -------------------------
+        user_book = Booking.objects.filter(user=user)[0]
+        event_url = user_book.event.get_absolute_url()
+        context['event_url'] = event_url
+        c_def = self.get_user_context(title=f'Профиль пользователя {user}')
+        return dict(list(context.items()) + list(c_def.items()))
