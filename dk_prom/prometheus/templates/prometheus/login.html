@@ -5,7 +5,7 @@
   <form method="post">
     {% csrf_token %}
 
-    <h1 class="h3 mb-3 fw-normal">{{title}}</h1>
+    <h1 class="h3 mb-3 fw-normal text-center">{{title}}</h1>
     <div class="form-floating" >
       {{form.username}}
       <label>Логин</label>
@@ -21,7 +21,7 @@
         <input type="checkbox" value="remember-me"> Запомнить меня
       </label>
     </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
+    <button class="w-100 btn btn-lg btn-secondary" type="submit">Войти</button>
   </form>
 </main>
 {% endblock %}
