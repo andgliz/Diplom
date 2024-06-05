@@ -1,0 +1,43 @@
+{% extends 'prometheus/base.html' %}
+
+{% block content %}
+<div class="container mt-3">
+    <h2>Личный кабинет {{ user_profile }}</h2>
+    <hr>
+    <div class="row">
+        <div class="col-xl-8 сol-sm-12">
+            <h3 class="mb-3">Билеты:</h3>
+            {% for book in user_book %}
+            <div class="row">
+                <div class="col-lg-9 col-sm-12">
+                    <h4 class="head2"><a
+                            class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                            href="{{ event_url }}">{{ book.event }}</a></h4>
+                    <div class="mb-3">
+                        <p class="lead">Количество: {{ book.seats_reserved }}</p>
+                    </div>
+                </div>
+            </div>
+            <hr class="m-1">
+            {% endfor %}
+        </div>
+        <div class="col-xl-4 col-sm-12 border border-start border-0">
+            <h3 class="mb-3">Информация:</h3>
+            <p>
+                <b>Имя пользователя:</b> {{ user_profile }}
+                {% if user_profile.first_name %}
+                <br>
+                <b>Имя:</b> {{ user_profile.first_name }}
+                {% endif %}
+                {% if user_profile.last_name %}
+                <br>
+                <b>Фамилия:</b> {{ user_profile.last_name }}</p>
+            {% endif %}
+            <br>
+            <a class="btn btn-primary my-btn me-1"
+               href="{% url 'user_profile_settings' username=user_profile.username %}">Настройки профиля
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
