@@ -63,8 +63,6 @@ class AfishaCategory(DataMixin, ListView):
 
 class ShowEvent(DataMixin, FormMixin, DetailView):
     model = Events
-    # TODO: Посмотреть как вставлять дефолт параметры для формы
-    #  https://stackoverflow.com/questions/604266/django-set-default-form-values
     form_class = BookingForm
     template_name = 'prometheus/event.html'
     slug_url_kwarg = 'event_slug'
@@ -75,16 +73,26 @@ class ShowEvent(DataMixin, FormMixin, DetailView):
         context = super().get_context_data(**kwargs)
 
         cur_event = context['event']
+        free_seats = self.calculate_free_seats(cur_event)
+        is_buy_shown = free_seats > 0
+        is_event_free = cur_event.cost == 0
 
         context['title'] = cur_event.title
-        context['free_seats'] = self.calculate_free_seats(cur_event)
+        context['free_seats'] = free_seats
+        context['is_buy_shown'] = is_buy_shown
+        context['is_event_free'] = is_event_free
 
         c_def = self.get_user_context(title="Афиша")
         return dict(list(context.items()) + list(c_def.items()))
 
     def get_form(self, form_class=None):
         form = super().get_form()
+        free_seats = self.calculate_free_seats(self.object)
+
         form.fields["event"].initial = self.object
+        form.fields["seats_reserved"].widget.attrs.update(
+            {'max': free_seats}
+        )
         return form
 
     def calculate_free_seats(self, cur_event):

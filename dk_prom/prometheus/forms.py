@@ -67,6 +67,8 @@ class LoginUserForm(AuthenticationForm):
 
 
 class BookingForm(forms.ModelForm):
+
+    seats_reserved = forms.IntegerField(min_value=1)
     class Meta:
         model = Booking
         fields = ['event', 'seats_reserved']

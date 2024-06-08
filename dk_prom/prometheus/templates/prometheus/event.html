@@ -1,7 +1,7 @@
 {% extends 'prometheus/base.html' %}
 
 {% block content %}
-<div class="card" style="max-width: 1320px;" >
+<div class="card" style="max-width: 1320px;">
     <div class="row g-3">
         <div class="col-md-4">
             <img style="width: 100%;" src="{{event.image.url}}" class="img-fluid rounded-start" alt="...">
@@ -32,11 +32,21 @@
             <div class="row">
                 <div class="card-body">
                     <p class="card-text"><small class="text-body-secondary">{{event.cost}} р.</small></p>
-                    {% if request.user.is_authenticated %}
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal">
-                        Купить билет
-                    </button>
+                    {% if is_buy_shown %}
+                        {% if request.user.is_authenticated %}
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Купить билет
+                            </button>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="btn btn-secondary" role="button">Купить билет</a>
+                        {% endif %}
+                    {% else %}
+                        {% if is_event_free %}
+                            <h5 class="form-label">Посещение свободно!</h5>
+                        {% else %}
+                            <h5 class="form-label">Места разобраны</h5>
+                        {% endif %}
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -70,7 +80,4 @@
         </div>
     </div>
 </form>
-{% else %}
-<a href="{% url 'login' %}" class="btn btn-secondary" role="button">Купить билет</a></div></div></div></div></div>
-{% endif %}
 {% endblock %}
