@@ -23,6 +23,13 @@ class SpacesAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
+class RecordAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "number", "group")
+    list_display_links = ("id", "name")
+    search_fields = ("name",)
+
+
 admin.site.register(Events, PrometheusAdmin)
 admin.site.register(Spaces, SpacesAdmin)
 admin.site.register(Categories, CategoriesAdmin)
+admin.site.register(FirstLessons, RecordAdmin)

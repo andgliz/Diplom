@@ -1,16 +1,25 @@
 {% extends 'prometheus/base.html' %}
 
 {% block content %}
-<h1>{{title}}</h1>
+<main class="form-signin">
+    <form action="{% url 'art' %}" method="post">
+        {% csrf_token %}
 
-<form action="{% url 'art' %}" method="post">
-    {% csrf_token %}
+        <h1 class="h3 mb-3 fw-normal text-center">{{title}}</h1>
+        <div class="form-floating">
+            {{form.name}}
+            <label>Ваше имя</label>
+        </div>
+        <div class="form-floating">
+            {{form.number}}
+            <label>Номер телефона</label>
+        </div>
+        <div class="form-floating">
+            {{form.group}}
+            <label>Выберите коллектив</label>
+        </div>
 
-{% for f in form %}
-<p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
-<div class="form-error">{{ f.errors }}</div>
-{% endfor %}
-
-    <button type="submit">Отправить</button>
-</form>
+        <button class="w-100 btn btn-lg btn-secondary" type="submit">Отправить</button>
+    </form>
+</main>
 {% endblock %}

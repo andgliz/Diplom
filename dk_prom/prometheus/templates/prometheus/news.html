@@ -1,4 +1,52 @@
 {% extends 'prometheus/base.html' %}
+{% load static %}
 
 {% block content %}
+<div class="container-fluid">
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        <div class="col">
+            <div class="card">
+                <img src="{% static 'prometheus/images/jivi.jpg' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Танцевальная студия "Арт-Микс" отметила свой юбилей ярким концертом</h5>
+                    <p class="card-text">20 апреля 2024 года в зрительном зале Городского дома культуры «Прометей»
+                        состоялся юбилейный концерт «Живи танцуя» танцевальной студии... </p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <img src="{% static 'prometheus/images/vt.jpg' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Представляем вашему вниманию онлайн-выставку "Моя семейная победа 1945
+                        года"</h5>
+                    <p class="card-text">В преддверии Дня Победы в Городском доме культуры "Прометей" была организована
+                        выставка "Моя семейная победа 1945 года".
+                        Выставка создана... </p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <img src="{% static 'prometheus/images/tr.jpg' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Интересное семейное мероприятие состоялось в библиотеке ГДК "Прометей"</h5>
+                    <p class="card-text">#всейсемьей_в_библиотеку 23 мая 2024 года в Муниципальной библиотеке ГДК
+                        "Прометей" состоялось мероприятие, посвященное году Семьи "Семейный досуг, как хобби и форма
+                        воспитания"... </p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <img src="{% static 'prometheus/images/cht.jpg' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Если трудно - просто позвони</h5>
+                    <p class="card-text">В рамках проведения всероссийской акции "Детский телефон доверия" 17 мая 2024
+                        года в муниципальной библиотеке ГДК "Прометей" был оформлен...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

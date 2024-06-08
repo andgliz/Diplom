@@ -4,11 +4,10 @@ from .views import *
 
 urlpatterns = [
     path('', MainPage.as_view(), name='home'),
-    path('categories/', categories),
     path('afisha/', Afisha.as_view(), name='afisha'),
     path('about/', about, name='about'),
-    path('news/', NewsUser.as_view(), name='news'),
-    path('art/', art, name='art'),
+    path('news/', NewsPage.as_view(), name='news'),
+    path('art/', ArtPage.as_view(), name='art'),
     path('login/', LoginUser.as_view(), name='login'),
     path('logout/', logout_user, name='logout'),
     path('book/', proceed_book, name='book'),

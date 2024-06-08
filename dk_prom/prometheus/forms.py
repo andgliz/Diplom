@@ -12,17 +12,23 @@ Groups = (
 )
 
 
-class FirstLessonForm(forms.Form):
-    name = forms.CharField(max_length=255, label='Имя')
-    surname = forms.CharField(max_length=255, label='Фамилия')
-    child_name = forms.CharField(max_length=255, label='Имя ребёнка')
-    age = forms.IntegerField(max_value=18, label='Возраст ребёнка')
-    mail = forms.EmailField(label='Почта')
-    group = forms.ChoiceField(choices=Groups, label='Интересующий коллектив')
+class FirstLessonForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['group'].empty_label = "Коллектив не выбран"
+
+    class Meta:
+        model = FirstLessons
+        fields = '__all__'
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control',  'placeholder': "Ваше имя"}),
+            'number': forms.TextInput(attrs={'class': 'form-control',  'placeholder': "Номер телефона"}),
+            'group': forms.Select(attrs={'class': 'form-control',  'placeholder': "Выберите коллектив"}),
+        }
 
 
 class AddEventForm(forms.ModelForm):
-    def __int__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['category'].empty_label = "Категория не выбрана"
 
@@ -30,7 +36,15 @@ class AddEventForm(forms.ModelForm):
         model = Events
         fields = '__all__'
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-input'}),
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'slug': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'data': forms.DateInput(attrs={'class': 'form-control'}),
+            'time': forms.TimeInput(attrs={'class': 'form-control'}),
+            'cost': forms.NumberInput(attrs={'class': 'form-control'}),
+            'space': forms.Select(attrs={'class': 'form-control'}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
         }
 
     prepopulated_fields = {"slug": ("title",)}
@@ -55,7 +69,10 @@ class LoginUserForm(AuthenticationForm):
 class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
-        fields = '__all__'
+        fields = ['event', 'seats_reserved']
+        widgets = {
+            'event': forms.HiddenInput(),
+        }
 
 
 class UserInfoForm(forms.ModelForm):
