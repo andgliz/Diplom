@@ -21,9 +21,9 @@ class FirstLessonForm(forms.ModelForm):
         model = FirstLessons
         fields = '__all__'
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control',  'placeholder': "Ваше имя"}),
-            'number': forms.TextInput(attrs={'class': 'form-control',  'placeholder': "Номер телефона"}),
-            'group': forms.Select(attrs={'class': 'form-control',  'placeholder': "Выберите коллектив"}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Ваше имя"}),
+            'number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Номер телефона"}),
+            'group': forms.Select(attrs={'class': 'form-control', 'placeholder': "Выберите коллектив"}),
         }
 
 

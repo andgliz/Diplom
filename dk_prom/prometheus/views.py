@@ -140,6 +140,18 @@ class ArtPage(DataMixin, CreateView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
+class ShowGroup(DataMixin, DetailView):
+    model = Groups
+    template_name = 'prometheus/group.html'
+    slug_url_kwarg = 'group_slug'
+    context_object_name = 'group'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Творчество")
+        return dict(list(context.items()) + list(c_def.items()))
+
+
 class NewsPage(DataMixin, LoginView):
     form_class = LoginUserForm
     template_name = 'prometheus/news.html'
@@ -151,6 +163,17 @@ class NewsPage(DataMixin, LoginView):
 
     def get_success_url(self):
         return reverse_lazy('home')
+
+
+class AddNew(DataMixin, CreateView):
+    form_class = AddNewForm
+    template_name = 'prometheus/add_event.html'
+    success_url = reverse_lazy('afisha')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Добавление события")
+        return dict(list(context.items()) + list(c_def.items()))
 
 
 def about(request):

@@ -29,7 +29,15 @@ class RecordAdmin(admin.ModelAdmin):
     search_fields = ("name",)
 
 
+class GroupAdmin(admin.ModelAdmin):
+    list_display = ("id", "name", "slug", "image1", "image2", "image3", "image4", "image5")
+    list_display_links = ("id", "name")
+    search_fields = ("name",)
+    prepopulated_fields = {"slug": ("name",)}
+
+
 admin.site.register(Events, PrometheusAdmin)
 admin.site.register(Spaces, SpacesAdmin)
 admin.site.register(Categories, CategoriesAdmin)
 admin.site.register(FirstLessons, RecordAdmin)
+admin.site.register(Groups, GroupAdmin)

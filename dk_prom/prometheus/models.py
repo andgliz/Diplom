@@ -112,3 +112,25 @@ class News(models.Model):
         verbose_name = 'Новость'
         verbose_name_plural = 'Новости'
         ordering = ['time_create']
+
+
+class Groups(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Название коллектива")
+    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
+    description = models.TextField(blank=True, verbose_name="Описание")
+    image1 = models.ImageField(upload_to="photos/group/", verbose_name="Фото 1")
+    image2 = models.ImageField(upload_to="photos/group/", verbose_name="Фото 2")
+    image3 = models.ImageField(upload_to="photos/group/", verbose_name="Фото 3")
+    image4 = models.ImageField(upload_to="photos/group/", verbose_name="Фото 4")
+    image5 = models.ImageField(upload_to="photos/group/", verbose_name="Фото 5")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('group', kwargs={'group_slug': self.slug})
+
+    class Meta:
+        verbose_name = 'Коллектив'
+        verbose_name_plural = 'Коллективы'
+        ordering = ['id']
