@@ -43,7 +43,7 @@
     </div>
 </div>
 
-
+<!-- TODO: Вынести в отдельный шаблон -->
 <!-- Модальное окно -->
 <form action="{% url 'book' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -58,10 +58,9 @@
                 </div>
                 <div class="modal-body">
                     <h4>Количество оставшихся билетов: {{free_seats}}</h4>
-                    {% for f in form %}
-                    <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}
-                    <div class="form-error">{{ f.errors }}</div>
-                    {% endfor %}
+                    {{ form.event }}
+                    <label class="form-label">{{ form.seats_reserved.label }}</label> {{ form.seats_reserved }}
+                    <div class="form-error">{{ form.seats_reserved.errors }}</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
@@ -72,6 +71,6 @@
     </div>
 </form>
 {% else %}
-<a href="{% url 'login' %}" class="btn btn-secondary" role="button">Купить билет</a>
+<a href="{% url 'login' %}" class="btn btn-secondary" role="button">Купить билет</a></div></div></div></div></div>
 {% endif %}
 {% endblock %}

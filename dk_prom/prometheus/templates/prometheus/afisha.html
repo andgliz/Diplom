@@ -39,10 +39,9 @@
             <a href="{{ e.get_absolute_url }}"><img class="img-article-left thumb" style="width: 80%;"
                                                     src="{{e.image.url}}"></a>
             {% endif %}
-            <p><h4><a
-                class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+            <h4><a
+                class="link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
                 href="{{ e.get_absolute_url }}">{{e.title}}</a></h4>
-            </p>
         </div>
         {% endfor %}
     </div>
