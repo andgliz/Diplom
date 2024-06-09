@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 {% load static %}
-{% load prometheus_tags %}
 <html>
 <head>
     <title>{{title}}</title>
@@ -41,24 +40,21 @@
         </div>
     </nav>
 </header>
-<body>
+<body class="d-flex flex-column min-vh-100">
 <!--<form class="d-flex" role="search">-->
 <!--				<input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">-->
 <!--				<button class="btn btn-outline-success" type="submit">Поиск</button>-->
 <!--			</form>-->
-<main>
     <div class="pt-5 my-5">
         {% block content %}
         {% endblock %}
     </div>
 
-
-    <nav class="navbar bg-body-tertiary">
+    <footer class="mt-auto bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Фиксированный внизу</a>
         </div>
-    </nav>
-</main>
+    </footer>
 <script src="{% static 'prometheus/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
