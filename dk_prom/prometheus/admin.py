@@ -23,6 +23,12 @@ class SpacesAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
+class BookingAdmin(admin.ModelAdmin):
+    list_display = ("id", "time", "event", "user", "seats_reserved")
+    list_display_links = ("id", "event")
+    search_fields = ("event",)
+
+
 class RecordAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "number", "group")
     list_display_links = ("id", "name")
@@ -49,3 +55,4 @@ admin.site.register(Categories, CategoriesAdmin)
 admin.site.register(FirstLessons, RecordAdmin)
 admin.site.register(Groups, GroupAdmin)
 admin.site.register(News, NewsAdmin)
+admin.site.register(Booking, BookingAdmin)

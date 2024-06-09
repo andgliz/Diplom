@@ -31,23 +31,23 @@
     <div class="row">
         <div class="col-xl-8 сol-sm-12">
             <h3 class="mb-3">Билеты:</h3>
-            {% for book in user_book %}
-            {% if book.event %}
-            <div class="row">
-                <div class="col-lg-9 col-sm-12">
-                    <h4 class="head2"><a
-                            class="link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-                                                    href="{{ event_url }}">{{ book.event }}</a></h4>
+            {% for book, event_url in bookings_to_url %}
+                <div class="row">
+                    <div class="col-lg-9 col-sm-12">
+                        <h4 class="head2"><a
+                                class="link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                                href="{{ event_url }}">{{ book.event }}</a></h4>
                         <div class="mb-3">
                             <p class="lead">Количество: {{ book.seats_reserved }}</p>
                         </div>
+                    </div>
                 </div>
-            </div>
-            {% else %}
-            <h2>You don't have any tickets</h2>
-            {% endif %}
-            <hr class="m-1">
+                <hr class="m-1">
             {% endfor %}
+            {% if not bookings_to_url %}
+                <h2>У вас нет купленных билетов</h2>
+            {% endif %}
+
         </div>
         <div class="col-xl-4 col-sm-12 border border-start border-0">
             <h3 class="mb-3">Информация:</h3>

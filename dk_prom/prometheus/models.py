@@ -69,6 +69,11 @@ class Booking(models.Model):
     def get_absolute_url(self):
         return reverse('booking', kwargs={'book_id': self.pk})
 
+    class Meta:
+        verbose_name = 'Бронь'
+        verbose_name_plural = 'Брони'
+        ordering = ['time']
+
 
 class News(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")

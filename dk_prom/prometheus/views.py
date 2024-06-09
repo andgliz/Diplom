@@ -239,10 +239,13 @@ class UserProfileView(DataMixin, TemplateView):
         context['user_book'] = Booking.objects.filter(user=user)
         context['user_recover'] = FirstLessons.objects.all()
 
-        # -------------------------
-        user_book = Booking.objects.filter(user=user)[0]
-        event_url = user_book.event.get_absolute_url()
-        context['event_url'] = event_url
+        user_bookings = Booking.objects.filter(user=user)
+        bookings_to_url = list()
+        for book in user_bookings:
+            event_url = book.event.get_absolute_url()
+            bookings_to_url.append((book, event_url))
+
+        context['bookings_to_url'] = bookings_to_url
         c_def = self.get_user_context(title=f'Профиль пользователя {user}')
         return dict(list(context.items()) + list(c_def.items()))
 
