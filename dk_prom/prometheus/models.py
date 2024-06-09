@@ -70,35 +70,10 @@ class Booking(models.Model):
         return reverse('booking', kwargs={'book_id': self.pk})
 
 
-class FirstLessons(models.Model):
-    CHOICES = (
-        ("1", 'Ассорти'),
-        ("2", 'Радость'),
-        ("3", 'Родничок'),
-        ("4", 'Наш дом'),
-        ("5", '220 Вольт'),
-        ("6", 'Виват'),
-    )
-    name = models.CharField(max_length=255, verbose_name="Имя")
-    number = models.CharField(validators=[MinLengthValidator(11)], max_length=11, verbose_name="Номер телефона")
-    group = models.CharField(choices=CHOICES, verbose_name="Коллектив")
-
-    def get_absolute_url(self):
-        return reverse('trial', kwargs={'trial_id': self.pk})
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Запись в коллектив'
-        verbose_name_plural = 'Записи в коллектив'
-        ordering = ['id']
-
-
 class News(models.Model):
     title = models.CharField(max_length=255, verbose_name="Заголовок")
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name="URL")
-    post = models.TextField(blank=True, verbose_name="Текст новости")
+    post = models.TextField(blank=True, verbose_name="Пост")
     image = models.ImageField(upload_to="photos/%Y/%m/%d/", verbose_name="Фото")
     time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
 
@@ -112,6 +87,23 @@ class News(models.Model):
         verbose_name = 'Новость'
         verbose_name_plural = 'Новости'
         ordering = ['time_create']
+
+
+class FirstLessons(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Имя")
+    number = models.CharField(validators=[MinLengthValidator(11)], max_length=11, verbose_name="Номер телефона")
+    group = models.ForeignKey("Groups", on_delete=models.CASCADE, verbose_name="Коллектив")
+
+    def get_absolute_url(self):
+        return reverse('record', kwargs={'record_id': self.pk})
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Запись в коллектив'
+        verbose_name_plural = 'Записи в коллектив'
+        ordering = ['id']
 
 
 class Groups(models.Model):
