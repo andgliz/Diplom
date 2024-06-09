@@ -5,8 +5,9 @@ from .views import *
 urlpatterns = [
     path('', MainPage.as_view(), name='home'),
     path('afisha/', Afisha.as_view(), name='afisha'),
-    path('about/', about, name='about'),
+    path('about/', AboutPage.as_view(), name='about'),
     path('news/', NewsPage.as_view(), name='news'),
+    path('news/add_new/', AddNew.as_view(), name='add_new'),
     path('art/', ArtPage.as_view(), name='art'),
     path('art/<slug:group_slug>/', ShowGroup.as_view(), name='group'),
     path('login/', LoginUser.as_view(), name='login'),

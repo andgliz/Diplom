@@ -36,8 +36,16 @@ class GroupAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
 
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ("id", "title", "slug", "post", "image")
+    list_display_links = ("id", "title")
+    search_fields = ("title",)
+    prepopulated_fields = {"slug": ("title",)}
+
+
 admin.site.register(Events, PrometheusAdmin)
 admin.site.register(Spaces, SpacesAdmin)
 admin.site.register(Categories, CategoriesAdmin)
 admin.site.register(FirstLessons, RecordAdmin)
 admin.site.register(Groups, GroupAdmin)
+admin.site.register(News, NewsAdmin)

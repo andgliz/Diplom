@@ -129,7 +129,9 @@ class AddEvent(DataMixin, CreateView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-class ArtPage(DataMixin, CreateView):
+class ArtPage(DataMixin, CreateView, ListView):
+    model = Groups
+    context_object_name = 'group'
     form_class = FirstLessonForm
     template_name = 'prometheus/art.html'
     success_url = reverse_lazy('art')
@@ -167,12 +169,22 @@ class NewsPage(DataMixin, LoginView):
 
 class AddNew(DataMixin, CreateView):
     form_class = AddNewForm
-    template_name = 'prometheus/add_event.html'
-    success_url = reverse_lazy('afisha')
+    template_name = 'prometheus/add_new.html'
+    success_url = reverse_lazy('news')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title="Добавление события")
+        c_def = self.get_user_context(title="Добавление новости")
+        return dict(list(context.items()) + list(c_def.items()))
+
+
+class AboutPage(DataMixin, ListView):
+    model = Events
+    template_name = "prometheus/about.html"
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="О нас")
         return dict(list(context.items()) + list(c_def.items()))
 
 

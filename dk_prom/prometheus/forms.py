@@ -50,6 +50,20 @@ class AddEventForm(forms.ModelForm):
     prepopulated_fields = {"slug": ("title",)}
 
 
+class AddNewForm(forms.ModelForm):
+
+    class Meta:
+        model = News
+        fields = ['title', 'slug', 'post', 'image']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'slug': forms.TextInput(attrs={'class': 'form-control'}),
+            'post': forms.TextInput(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+
+
+
 class RegisterUserForm(UserCreationForm):
     username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(label='Email', widget=forms.EmailInput(attrs={'class': 'form-control'}))
@@ -67,8 +81,8 @@ class LoginUserForm(AuthenticationForm):
 
 
 class BookingForm(forms.ModelForm):
-
     seats_reserved = forms.IntegerField(min_value=1)
+
     class Meta:
         model = Booking
         fields = ['event', 'seats_reserved']
@@ -142,5 +156,3 @@ class UserPasswordForm(PasswordChangeForm):
             'placeholder': 'Повторите новый пароль'
         })
     )
-
-
