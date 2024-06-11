@@ -31,21 +31,23 @@
             </div>
             <div class="row">
                 <div class="card-body">
-                    <p class="card-text"><small class="text-body-secondary">{{event.cost}} р.</small></p>
-                    {% if is_buy_shown %}
-                        {% if request.user.is_authenticated %}
-                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                Купить билет
-                            </button>
-                        {% else %}
-                            <a href="{% url 'login' %}" class="btn btn-secondary" role="button">Купить билет</a>
-                        {% endif %}
+
+                    {% if is_event_free %}
+                    <h5 class="form-label">Посещение свободно!</h5>
                     {% else %}
-                        {% if is_event_free %}
-                            <h5 class="form-label">Посещение свободно!</h5>
-                        {% else %}
-                            <h5 class="form-label">Места разобраны</h5>
-                        {% endif %}
+                    {% if is_buy_shown %}
+                    {% if request.user.is_authenticated %}
+                    <p class="card-text"><small class="text-body-secondary">{{event.cost}} р.</small></p>
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                        Купить билет
+                    </button>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-secondary" role="button">Купить билет</a>
+                    {% endif %}
+                    {% else %}
+                    <h5 class="form-label">Места разобраны</h5>
+                    {% endif %}
                     {% endif %}
                 </div>
             </div>

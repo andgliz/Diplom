@@ -81,13 +81,17 @@ class LoginUserForm(AuthenticationForm):
 
 
 class BookingForm(forms.ModelForm):
-    seats_reserved = forms.IntegerField(min_value=1)
+    seats_reserved = forms.IntegerField(
+        min_value=1,
+        label='Выберите количество билетов',
+    )
 
     class Meta:
         model = Booking
         fields = ['event', 'seats_reserved']
         widgets = {
             'event': forms.HiddenInput(),
+            'seats_reserved': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
 
