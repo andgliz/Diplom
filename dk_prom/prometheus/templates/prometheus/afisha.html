@@ -34,9 +34,9 @@
 
     <div class="row pt-3">
         {% for e in events %}
-        <div class="col-sm-3">
+        <div class="col-lg-3">
             {% if e.image %}
-            <a href="{{ e.get_absolute_url }}"><img class="img-article-left thumb" style="width: 80%;"
+            <a href="{{ e.get_absolute_url }}"><img class="img-article-left thumb" style="width: 100%;"
                                                     src="{{e.image.url}}"></a>
             {% endif %}
             <h4><a
