@@ -38,7 +38,7 @@ class AddEventForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'slug': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'cols': 38, 'rows': 10, 'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
             'data': forms.DateInput(attrs={'class': 'form-control'}),
             'time': forms.TimeInput(attrs={'class': 'form-control'}),
@@ -58,7 +58,7 @@ class AddNewForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'slug': forms.TextInput(attrs={'class': 'form-control'}),
-            'post': forms.TextInput(attrs={'class': 'form-control'}),
+            'post': forms.Textarea(attrs={'cols': 38, 'rows': 10, 'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
