@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 
 from .forms import *
 from .models import *
@@ -61,13 +62,14 @@ class AfishaCategory(DataMixin, ListView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-class ShowEvent(DataMixin, FormMixin, DetailView):
+class ShowEvent(DataMixin, SuccessMessageMixin, FormMixin, DetailView):
     model = Events
     form_class = BookingForm
     template_name = 'prometheus/event.html'
     slug_url_kwarg = 'event_slug'
     context_object_name = 'event'
     success_url = reverse_lazy('afisha')
+    success_message = "Спасибо за покупку!"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -112,6 +114,7 @@ def proceed_book(request):
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
+            messages.success(request,'Спасибо за покупку!')
             obj = form.save(commit=False)
             obj.user = request.user
             obj.save()
@@ -129,17 +132,23 @@ class AddEvent(DataMixin, CreateView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-class ArtPage(DataMixin, CreateView, ListView):
+class ArtPage(DataMixin, SuccessMessageMixin, CreateView, ListView):
     model = Groups
     context_object_name = 'group'
     form_class = FirstLessonForm
     template_name = 'prometheus/art.html'
     success_url = reverse_lazy('art')
+    success_message = "Ваша заявка успешно отправлена"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Творчество")
         return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        # form.instance.updater = self.request.user
+        form.save()
+        return super().form_valid(form)
 
 
 class ShowGroup(DataMixin, DetailView):
@@ -154,18 +163,26 @@ class ShowGroup(DataMixin, DetailView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-class NewsPage(DataMixin, LoginView):
-    form_class = LoginUserForm
-    template_name = 'prometheus/news.html'
+class NewsPage(DataMixin, ListView):
+    model = News
+    template_name = "prometheus/news.html"
+    context_object_name = 'news'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Новости")
         return dict(list(context.items()) + list(c_def.items()))
 
-    def get_success_url(self):
-        return reverse_lazy('home')
+class ShowPost(DataMixin, DetailView):
+    model = News
+    template_name = 'prometheus/post.html'
+    slug_url_kwarg = 'post_slug'
+    context_object_name = 'post'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title="Новости")
+        return dict(list(context.items()) + list(c_def.items()))
 
 class AddNew(DataMixin, CreateView):
     form_class = AddNewForm
@@ -192,10 +209,11 @@ def about(request):
     return render(request, 'prometheus/about.html', {'title': 'О нас'})
 
 
-class RegisterUser(DataMixin, CreateView):
+class RegisterUser(DataMixin, SuccessMessageMixin, CreateView):
     form_class = RegisterUserForm
     template_name = 'prometheus/register.html'
     success_url = reverse_lazy('login')
+    success_message = "Регистрация прошла успешно! Добро пожаловать!"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -208,9 +226,10 @@ class RegisterUser(DataMixin, CreateView):
         return redirect('home')
 
 
-class LoginUser(DataMixin, LoginView):
+class LoginUser(DataMixin, SuccessMessageMixin, LoginView):
     form_class = LoginUserForm
     template_name = 'prometheus/login.html'
+    success_message = "Добро пожаловать!"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
