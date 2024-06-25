@@ -114,7 +114,7 @@ def proceed_book(request):
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
-            messages.success(request,'Спасибо за покупку!')
+            messages.success(request, 'Спасибо за покупку!')
             obj = form.save(commit=False)
             obj.user = request.user
             obj.save()
@@ -173,6 +173,7 @@ class NewsPage(DataMixin, ListView):
         c_def = self.get_user_context(title="Новости")
         return dict(list(context.items()) + list(c_def.items()))
 
+
 class ShowPost(DataMixin, DetailView):
     model = News
     template_name = 'prometheus/post.html'
@@ -183,6 +184,7 @@ class ShowPost(DataMixin, DetailView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title="Новости")
         return dict(list(context.items()) + list(c_def.items()))
+
 
 class AddNew(DataMixin, CreateView):
     form_class = AddNewForm
