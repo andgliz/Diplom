@@ -7,14 +7,18 @@
     <link href="{% static 'prometheus/css/signin.css' %}" rel="stylesheet">
     <!--	<link type="text/css" href="{% static 'prometheus/css/styles.css' %}" rel="stylesheet" />-->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="shortcut icon" href="{% static 'prometheus/images/main.ico' %}" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{% static 'prometheus/images/dk.ico' %}" type="image/x-icon"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <header>
     <nav class="navbar navbar-expand-md fixed-top bg-dark" data-bs-theme="dark">
         <div class="container-fluid">
-            <ul class="nav nav-underline justify-content-center">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 {% for m in menu %}
                 {% if m.title == title %}
                 <li class="nav-item">
@@ -26,17 +30,25 @@
                 </li>
                 {% endif%}
                 {% endfor %}
-            </ul>
-            <ul class="nav justify-content-end">
-                {% if request.user.is_authenticated %}
-                <a href="{% url 'user_profile' username=user.username %}" class="nav-link">{{user.username}}</a> |
-                <a
-                        href="{% url 'logout' %}" class="nav-link">Выйти</a>
-                {% else %}
-                <a href="{% url 'register' %}" class="nav-link">Регистрация</a> | <a
-                    href="{% url 'login' %}" class="nav-link">Войти</a>
-                {% endif %}
-            </ul>
+                </ul>
+                <div class="navbar-nav login-btn">
+                    {% if request.user.is_authenticated %}
+                        <div class="nav-item">
+                            <a style="color: white" href="{% url 'user_profile' username=user.username %}" class="nav-link ">{{user.username}}</a>
+                        </div>
+                        <div class="nav-item">
+                            <a style="color: white" href="{% url 'logout' %}" class="nav-link">Выйти</a>
+                        </div>
+                    {% else %}
+                        <div class="nav-item">
+                            <a style="color: white" href="{% url 'register' %}" class="nav-link">Регистрация</a>
+                        </div>
+                        <div class="nav-item">
+                            <a style="color: white" href="{% url 'login' %}" class="nav-link">Войти</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </nav>
 </header>
@@ -45,16 +57,25 @@
 <!--				<input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск">-->
 <!--				<button class="btn btn-outline-success" type="submit">Поиск</button>-->
 <!--			</form>-->
-    <div class="pt-3 my-5">
-        {% block content %}
-        {% endblock %}
+<div class="pt-3 my-5">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{% if message.tags %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+         role="alert">
+        <i class="fas fa-info-circle"></i> {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    {% endfor %}
+    {% endif %}
+    {% block content %}
+    {% endblock %}
+</div>
 
-    <footer class="mt-auto bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Фиксированный внизу</a>
-        </div>
-    </footer>
+<footer class="mt-auto bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Фиксированный внизу</a>
+    </div>
+</footer>
 <script src="{% static 'prometheus/js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>
