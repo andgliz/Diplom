@@ -14,38 +14,41 @@
 <header>
     <nav class="navbar navbar-expand-md fixed-top bg-dark" data-bs-theme="dark">
         <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                {% for m in menu %}
-                {% if m.title == title %}
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{% url m.url_name %}">{{m.title}}</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="{% url m.url_name %}">{{m.title}}</a>
-                </li>
-                {% endif%}
-                {% endfor %}
+                    {% for m in menu %}
+                    {% if m.title == title %}
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url m.url_name %}">{{m.title}}</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{% url m.url_name %}">{{m.title}}</a>
+                    </li>
+                    {% endif%}
+                    {% endfor %}
                 </ul>
                 <div class="navbar-nav login-btn">
                     {% if request.user.is_authenticated %}
-                        <div class="nav-item">
-                            <a style="color: white" href="{% url 'user_profile' username=user.username %}" class="nav-link ">{{user.username}}</a>
-                        </div>
-                        <div class="nav-item">
-                            <a style="color: white" href="{% url 'logout' %}" class="nav-link">Выйти</a>
-                        </div>
+                    <div class="nav-item">
+                        <a style="color: white" href="{% url 'user_profile' username=user.username %}"
+                           class="nav-link ">{{user.username}}</a>
+                    </div>
+                    <div class="nav-item">
+                        <a style="color: white" href="{% url 'logout' %}" class="nav-link">Выйти</a>
+                    </div>
                     {% else %}
-                        <div class="nav-item">
-                            <a style="color: white" href="{% url 'register' %}" class="nav-link">Регистрация</a>
-                        </div>
-                        <div class="nav-item">
-                            <a style="color: white" href="{% url 'login' %}" class="nav-link">Войти</a>
-                        </div>
+                    <div class="nav-item">
+                        <a style="color: white" href="{% url 'register' %}" class="nav-link">Регистрация</a>
+                    </div>
+                    <div class="nav-item">
+                        <a style="color: white" href="{% url 'login' %}" class="nav-link">Войти</a>
+                    </div>
                     {% endif %}
                 </div>
             </div>
@@ -73,7 +76,21 @@
 
 <footer class="mt-auto bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Фиксированный внизу</a>
+        <div class="row">
+            <div class="col-5">
+                {% for m in menu %}
+                <a class="nav-link" aria-current="page" href="{% url m.url_name %}">{{m.title}}</a>
+                {% endfor %}
+            </div>
+
+            <div class="col text-end">
+                <h6>8(395)-666-24-68</h6>
+                <a href="https://ok.ru/zdravstuyt"><img class="img-article-left thumb" style="width: 15%;"
+                                                        src="{% static 'prometheus/images/ok.png' %}"></a>
+                <a href="https://vk.com/public201838414"><img class="img-article-left thumb" style="width: 15%;"
+                                                                   src="{% static 'prometheus/images/vk.png' %}"></a>
+            </div>
+        </div>
     </div>
 </footer>
 <script src="{% static 'prometheus/js/bootstrap.bundle.min.js' %}"></script>
